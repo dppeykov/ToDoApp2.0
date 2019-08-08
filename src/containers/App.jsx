@@ -43,6 +43,27 @@ export default class App extends Component {
     }
   };
 
+  toggleTodo = todo =>
+    this.setState({
+      toDoItems: this.state.toDoItems.map(item =>
+        item.action === todo.action ? { ...item, done: !item.done } : item
+      )
+    });
+
+  todoTableRows = () =>
+    this.state.toDoItems.map(item => (
+      <tr key={item.action}>
+        <td>{item.action}</td>
+        <td>
+          <input
+            type="checkbox"
+            checked={item.done}
+            onChange={() => this.toggleTodo(item)}
+          />
+        </td>
+      </tr>
+    ));
+
   render() {
     let {
       toDoItems,
@@ -73,7 +94,17 @@ export default class App extends Component {
             <h3>+ ALL DONE ITEMS</h3>
           </div>
         ) : (
-          <div>ALL ITEMS TO DO + ALL ITEMS DONE</div>
+          <div>
+            <table className="container table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Done</th>
+                </tr>
+              </thead>
+              <tbody>{this.todoTableRows()}</tbody>
+            </table>
+          </div>
         )}
       </div>
     );
