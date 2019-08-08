@@ -3,18 +3,14 @@ import Header from "../components/Header/Header";
 import Counters from "../components/Counters/Counters";
 import Alert from "../components/Alert/Alert";
 import CreateNewToDoInput from "../components/CreateNewToDoInput/CreateNewToDoInput";
+import AllDoneCard from "../components/AllDoneCard/AllDoneCard";
 
 export default class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      toDoItems: [
-        { action: "Buy Flowers", done: false },
-        { action: "Get Shoes", done: false },
-        { action: "Collect Tickets", done: true },
-        { action: "Call Joe", done: true }
-      ],
+      toDoItems: [],
       userName: "",
       newTextValue: "",
       noInputButClicked: false,
@@ -57,14 +53,12 @@ export default class App extends Component {
     } = this.state;
 
     let itemsDone = toDoItems.filter(item => item.done === true).length;
+    let itemsToDoInQueue = toDoItems.length - itemsDone;
 
     return (
       <div>
         <Header userName={userName} changingUserName={this.changeNameHandler} />
-        <Counters
-          itemsDone={itemsDone}
-          itemsLeft={toDoItems.length - itemsDone}
-        />
+        <Counters itemsDone={itemsDone} itemsLeft={itemsToDoInQueue} />
         <CreateNewToDoInput
           savingTheText={this.updateNewTextValue}
           currentText={newTextValue}
@@ -73,6 +67,14 @@ export default class App extends Component {
         {noInputButClicked || itemAlreadyExists ? (
           <Alert empty={noInputButClicked} exists={itemAlreadyExists} />
         ) : null}
+        {itemsToDoInQueue === 0 ? (
+          <div>
+            <AllDoneCard />
+            <h3>+ ALL DONE ITEMS</h3>
+          </div>
+        ) : (
+          <div>ALL ITEMS TO DO + ALL ITEMS DONE</div>
+        )}
       </div>
     );
   }
